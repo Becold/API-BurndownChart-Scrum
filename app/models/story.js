@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var StorySchema = new Schema({
     _sprint: {
+        required: true,
         type: Schema.Types.ObjectId,
         ref: 'Sprint'
     },
