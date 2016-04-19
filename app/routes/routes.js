@@ -1,7 +1,8 @@
 var router = require('express').Router();
 
 // Models
-// Todo.
+var Sprint = require('../models/sprint');
+var Story = require('../models/story');
 
 // Routes
 router.route('/')
