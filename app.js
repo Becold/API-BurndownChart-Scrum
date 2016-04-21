@@ -4,7 +4,6 @@ var express = require('express'),
     middlewares = require('./app/routes/middlewares');
 
 // Cfg
-
 app.use(bodyparser.urlencoded({"extended" : false}));
 app.use(bodyparser.json());
 var routes = {

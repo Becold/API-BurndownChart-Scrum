@@ -1,8 +1,10 @@
 var router = require('express').Router(),
-    _ = require('lodash');
+    _ = require('lodash'),
+    util = require('util');
 
 // Models
 var Sprint = require('../models/sprint');
+var Story = require('../models/story');
 
 /** Sprint
  * Route: GET /sprint - Récupère tous les sprints
@@ -105,5 +107,55 @@ router.route('/sprint/:sprintid')
   })
 ;
 
+
+
+/** Sprint
+ * Route: GET /sprint/:id/getGraph - Récupère les données d'un sprint pour l'afficher dans un graph
+ */
+router.route('/sprint/:sprintid/getGraph')
+  .get(function(req, res) {
+      var datas = {
+          sprint: {},
+          stories: {}
+      };
+
+      Sprint.findById(req.params.sprintid, function(err, sprint) {
+          if (err) {
+              res.status(400);
+              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
+              return;
+          }
+
+          if(sprint != null) {
+              datas.sprint = sprint;
+
+              Story.find({_sprint: req.params.sprintid}).populate('historyPoints').exec(function(err, stories) {
+                  if (err) {
+                      res.status(400);
+                      res.json({success: false, message: 'Une erreur s\'est produite', error: err});
+                      return;
+                  }
+
+                  if(stories != null) {
+                      datas.stories = stories;
+
+                      console.log(util.inspect(datas));
+                      res.json({success: true, message: datas});
+                  }
+                  else {
+                      res.status(400);
+                      res.json({success: false, message: 'Ce sprint n\'a aucune stories'});
+                      return;
+                  }
+
+              });
+          }
+          else {
+              res.status(400);
+              res.json({success: false, message: 'Ce sprint n\'existe pas'});
+              return;
+          }
+      });
+  })
 
 module.exports = router;

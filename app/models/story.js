@@ -14,7 +14,10 @@ var StorySchema = new Schema({
         trim: true
     },
 
-    currentPoint: Number, // Todo: Checker la doc s'il n'existe pas un type similaire à Int.
+    historyPoints: [{
+        type: Schema.Types.ObjectId,
+        ref: 'HistoryPoints'
+    }],
 
     createdAt: {
         type: Date,
@@ -27,10 +30,10 @@ var StorySchema = new Schema({
     }
 });
 
-StorySchema.statics = {
+/* StorySchema.statics = {
     getPopulateFields: function() {
-        return '_sprint';
+        return '_sprint historyPoints';
     }
-};
+}; */
 
 module.exports = mongoose.model('Story', StorySchema);
