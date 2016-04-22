@@ -21,6 +21,7 @@ router.route('/gd')
         var sprint1 = new Sprint();
         sprint1.name = "Faire l'api";
         sprint1.finishAt = addDays(Date.now(), 7);
+          sprint1.createdAt = Date.now();
         sprint1.save();
 
         // Story 1 : Express
@@ -32,24 +33,25 @@ router.route('/gd')
         var historyPoints1 = new HistoryPoints();
         historyPoints1._story = story1._id;
         historyPoints1.points = parseInt(10);
+        historyPoints1.date = Date.now();
         historyPoints1.save();
 
         var historyPoints2 = new HistoryPoints();
         historyPoints2._story = story1._id;
         historyPoints2.points = parseInt(5);
-        historyPoints1.date = addDays(Date.now(), 2);
+        historyPoints2.date = addDays(Date.now(), 2);
         historyPoints2.save();
 
         var historyPoints3 = new HistoryPoints();
         historyPoints3._story = story1._id;
         historyPoints3.points = parseInt(1);
-        historyPoints1.date = addDays(Date.now(), 3);
+        historyPoints3.date = addDays(Date.now(), 3);
         historyPoints3.save();
 
         var historyPoints4 = new HistoryPoints();
         historyPoints4._story = story1._id;
         historyPoints4.points = parseInt(0);
-        historyPoints1.date = addDays(Date.now(), 5);
+        historyPoints4.date = addDays(Date.now(), 5);
         historyPoints4.save();
 
         story1.historyPoints.push(historyPoints1);
@@ -67,12 +69,13 @@ router.route('/gd')
         var historyPoints1 = new HistoryPoints();
         historyPoints1._story = story2._id;
         historyPoints1.points = parseInt(2);
+          historyPoints1.date = Date.now();
         historyPoints1.save();
 
         var historyPoints2 = new HistoryPoints();
         historyPoints2._story = story2._id;
         historyPoints2.points = parseInt(0);
-        historyPoints1.date = addDays(Date.now(), 1);
+        historyPoints2.date = addDays(Date.now(), 1);
         historyPoints2.save();
 
         story2.historyPoints.push(historyPoints1);
@@ -88,24 +91,25 @@ router.route('/gd')
         var historyPoints1 = new HistoryPoints();
         historyPoints1._story = story3._id;
         historyPoints1.points = parseInt(12);
+          historyPoints1.date = Date.now();
         historyPoints1.save();
 
         var historyPoints2 = new HistoryPoints();
         historyPoints2._story = story3._id;
         historyPoints2.points = parseInt(5);
-        historyPoints1.date = addDays(Date.now(), 4);
+        historyPoints2.date = addDays(Date.now(), 4);
         historyPoints2.save();
 
         var historyPoints3 = new HistoryPoints();
         historyPoints3._story = story3._id;
         historyPoints3.points = parseInt(3);
-        historyPoints1.date = addDays(Date.now(), 5);
+        historyPoints3.date = addDays(Date.now(), 5);
         historyPoints3.save();
 
         var historyPoints4 = new HistoryPoints();
         historyPoints4._story = story3._id;
         historyPoints4.points = parseInt(0);
-        historyPoints1.date = addDays(Date.now(), 6);
+        historyPoints4.date = addDays(Date.now(), 6);
         historyPoints4.save();
 
         story3.historyPoints.push(historyPoints1);

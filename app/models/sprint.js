@@ -10,12 +10,12 @@ var SprintSchema = new Schema({
 
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
 
     finishAt: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     }
 });
 

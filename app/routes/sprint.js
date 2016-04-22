@@ -139,8 +139,47 @@ router.route('/sprint/:sprintid/getGraph')
                   if(stories != null) {
                       datas.stories = stories;
 
-                      console.log(util.inspect(datas));
-                      res.json({success: true, message: datas});
+                      var series = [];
+                      var totalPoints = 0;
+                      stories.forEach(function (story) {
+                          totalPoints += _.head(story.historyPoints).points;
+                      });
+
+                      series.push({
+                          name: 'Courbe idéal',
+                          data: [
+                              [(new Date(datas.sprint.createdAt).getTime()), totalPoints],
+                              [(new Date(datas.sprint.finishAt).getTime()), 0]
+                          ]
+                      });
+
+
+                      var dates = [];
+                      stories.forEach(function (story) {
+                          for (var i in story.historyPoints) {
+                              if (i > 0) {
+                                  var date = new Date(story.historyPoints[i].date).getTime();
+                                  dates.push({
+                                      date: date,
+                                      points: ((dates[date] != null) ? dates[date].points : 0) + (story.historyPoints[i - 1].points - story.historyPoints[i].points)
+                                  });
+                              }
+                          }
+                      });
+                      dates = _.sortBy(dates, 'date');
+                      var data = [
+                          [(new Date(datas.sprint.createdAt).getTime()), totalPoints]
+                      ];
+                      var current = totalPoints;
+                      dates.forEach(function (date) {
+                          data.push([date.date, (current -= date.points)]);
+                      });
+                      series.push({
+                          name: 'Courbe réel',
+                          data: data
+                      });
+
+                      res.json({series: series});
                   }
                   else {
                       res.status(400);

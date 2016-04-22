@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 module.exports = {
     // Todo: Mettre tout ce qui est "config" dans un fichier séparé
-    connectStr: "mongodb://admin:admin@192.168.0.240/chatonlandv2",
+    connectStr: "mongodb://admin:admin@192.168.0.240/scrub",
     init: function() {
 
         mongoose.connect(this.connectStr, { server: { auto_reconnect: true }});
