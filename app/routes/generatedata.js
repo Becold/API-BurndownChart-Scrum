@@ -60,7 +60,7 @@ router.route('/gd')
 
         // Story 2 : Mongodb
         var story2 = new Story();
-        story2._sprint = story2._id;
+        story2._sprint = sprint1._id;
         story2.name = "Mongodb"
         story2.save();
 
@@ -81,7 +81,7 @@ router.route('/gd')
 
         // Story 3 : Routes
         var story3 = new Story();
-        story3._sprint = story3._id;
+        story3._sprint = sprint1._id;
         story3.name = "Routes"
         story3.save();
 
