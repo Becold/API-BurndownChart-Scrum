@@ -17,23 +17,13 @@ var StorySchema = new Schema({
     historyPoints: [{
         type: Schema.Types.ObjectId,
         ref: 'HistoryPoints'
-    }],
-
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-
-    finishAt: {
-        type: Date,
-        default: Date.now
-    }
+    }]
 });
 
-/* StorySchema.statics = {
+StorySchema.statics = {
     getPopulateFields: function() {
         return '_sprint historyPoints';
     }
-}; */
+};
 
 module.exports = mongoose.model('Story', StorySchema);
