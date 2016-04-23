@@ -22,7 +22,7 @@ var StorySchema = new Schema({
 
 StorySchema.statics = {
     getPopulateFields: function() {
-        return '_sprint historyPoints';
+        return 'historyPoints';
     }
 };
 

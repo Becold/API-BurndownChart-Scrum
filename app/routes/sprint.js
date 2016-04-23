@@ -1,200 +1,94 @@
 var router = require('express').Router(),
     _ = require('lodash'),
-    util = require('util');
+    util = require('util'),
+    apiHelper = require('../lib/apiHelper');
 
 // Models
 var Sprint = require('../models/sprint');
 var Story = require('../models/story');
+var HistoryPoints = require('../models/historyPoints');
 
-/** Sprint
- * Route: GET /sprint - Récupère tous les sprints
- * Route: POST /sprint - {name: ""} - Insère un nouveau sprint
- */
-router.route('/sprint')
+// Routes
 
-  // Récupérer tous les sprint de la db
-  .get(function(req, res) {
-      Sprint.find(function(err, sprints) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-              return;
-          }
-
-          res.json({success: true, data: sprints});
-      });
-  })
-
-  // Ajouter un nouveau sprint à la DB
-  .post(function(req, res) {
-      var sprint = new Sprint();
-      sprint.name = req.body.name;
-
-      if (_.isEmpty(sprint.name)) {
-          res.status(400);
-          res.json({success: false, message: 'Le champs "name" est manquant'});
-          return;
-      }
-
-      sprint.save(function (err) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Impossible d\'enregistrer le sprint'});
-          }
-          res.json({success: true, message: 'Sprint crée!'});
-      });
-
-  })
-;
-
-
-/** Sprint
- * Route: GET /sprint/:id - Récupère un sprint
- * Route: PUT /sprint/:id - {name: ""} - Modifie un sprint
- * Route: DELETE /sprint/:id - Supprime un sprint
- */
-router.route('/sprint/:sprintid')
-
-  // Récupère un sprint en particulier (avec l'id)
-  .get(function(req, res) {
-      Sprint.findById(req.params.sprintid, function(err, sprint) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-              return;
-          }
-          res.json(sprint);
-      });
-  })
-
-  // Mets à jour un sprint en particulier (avec l'id)
-  .put(function(req, res) {
-      Sprint.findById(req.params.sprintid, function(err, sprint) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-              return;
-          }
-
-          sprint.name = req.body.name;
-
-          // save the sprint
-          sprint.save(function(err) {
-              if (err) {
-                  res.status(400);
-                  res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-                  return;
-              }
-
-              res.json({success: true, message: 'Sprint mis à jour!' });
-          });
-      });
-  })
-
-  // Supprime un sprint en particulier (avec l'id)
-  .delete(function(req, res) {
-      Sprint.remove({
-          _id: req.params.sprintid
-      }, function(err) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-              return;
-          }
-
-          res.json({success: true, message: 'Sprint supprimé' });
-      });
-  })
-;
-
-
-
-/** Sprint
- * Route: GET /sprint/:id/getGraph - Récupère les données d'un sprint pour l'afficher dans un graph
+/**
+ * GET /sprint/:id/getGraph - Récupère les données d'un sprint pour l'afficher dans un graph
  */
 router.route('/sprint/:sprintid/getGraph')
   .get(function(req, res) {
-      var datas = {
-          sprint: {},
-          stories: {}
-      };
 
       Sprint.findById(req.params.sprintid, function(err, sprint) {
-          if (err) {
-              res.status(400);
-              res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-              return;
-          }
+          if (err) return apiHelper.jsonError(res, 'something_happened', err);
 
-          if(sprint != null) {
-              datas.sprint = sprint;
+          if(!_.isUndefined(sprint)) {
 
-              Story.find({_sprint: req.params.sprintid}).populate('historyPoints').exec(function(err, stories) {
-                  if (err) {
-                      res.status(400);
-                      res.json({success: false, message: 'Une erreur s\'est produite', error: err});
-                      return;
-                  }
+              Story.find({_sprint: req.params.sprintid}).populate(Story.getPopulateFields()).exec(function(err, stories) {
+                  if (err) return apiHelper.jsonError(res, 'something_happened', err);
 
-                  if(stories != null) {
-                      datas.stories = stories;
+                  if(!_.isUndefined(stories)) {
 
-                      var series = [];
-                      var totalPoints = 0;
-                      stories.forEach(function (story) {
-                          totalPoints += _.head(story.historyPoints).points;
-                      });
-
-                      series.push({
-                          name: 'Courbe idéal',
-                          data: [
-                              [(new Date(datas.sprint.createdAt).getTime()), totalPoints],
-                              [(new Date(datas.sprint.finishAt).getTime()), 0]
-                          ]
-                      });
-
-
-                      var dates = [];
-                      stories.forEach(function (story) {
-                          for (var i in story.historyPoints) {
-                              if (i > 0) {
-                                  var date = new Date(story.historyPoints[i].date).getTime();
-                                  dates.push({
-                                      date: date,
-                                      points: ((dates[date] != null) ? dates[date].points : 0) + (story.historyPoints[i - 1].points - story.historyPoints[i].points)
-                                  });
-                              }
-                          }
-                      });
-                      dates = _.sortBy(dates, 'date');
-                      var data = [
-                          [(new Date(datas.sprint.createdAt).getTime()), totalPoints]
-                      ];
-                      var current = totalPoints;
-                      dates.forEach(function (date) {
-                          data.push([date.date, (current -= date.points)]);
-                      });
-                      series.push({
-                          name: 'Courbe réel',
-                          data: data
-                      });
+                      var series = dbdatasToGraphdata(sprint, stories);
 
                       res.json({series: series});
                   }
-                  else {
-                      res.status(400);
-                      res.json({success: false, message: 'Ce sprint n\'a aucune stories'});
-                      return;
-                  }
+                  else
+                      return apiHelper.jsonError(res, 'no_stories_at_this_sprint');
 
               });
           }
-          else {
-              res.status(400);
-              res.json({success: false, message: 'Ce sprint n\'existe pas'});
-              return;
-          }
+          else
+              return apiHelper.jsonError(res, 'no_sprint');
       });
+
   })
+
+// Utils
+// Algorythme pour créer les courbes du graphique
+function dbdatasToGraphdata (sprint, stories) {
+    var series = [];
+    var totalPoints = 0;
+
+    // Calcul de la courbe idéal
+    stories.forEach(function (story) {
+        totalPoints += _.head(story.historyPoints).points;
+    });
+
+    series.push({
+        name: 'Courbe idéal',
+        data: [
+            [(new Date(sprint.createdAt).getTime()), totalPoints],
+            [(new Date(sprint.finishAt).getTime()), 0]
+        ]
+    });
+
+
+    var dates = [];
+    // Algorythme de la courbe réel
+    stories.forEach(function (story) {
+        for (var i in story.historyPoints) {
+            if (i > 0) {
+                var date = new Date(story.historyPoints[i].date).getTime();
+                dates.push({
+                    date: date,
+                    points: ((dates[date] != null) ? dates[date].points : 0) + (story.historyPoints[i - 1].points - story.historyPoints[i].points)
+                });
+            }
+        }
+    });
+    dates = _.sortBy(dates, 'date'); // Trie par date
+    var data = [
+        [(new Date(sprint.createdAt).getTime()), totalPoints] // Premier point de la courbe
+    ];
+    var current = totalPoints;
+    dates.forEach(function (date) {
+        data.push([date.date, (current -= date.points)]); // Les autres points
+    });
+
+    series.push({
+        name: 'Courbe réel',
+        data: data
+    });
+
+    return series; // On retourne les 2 courbes
+}
 
 module.exports = router;

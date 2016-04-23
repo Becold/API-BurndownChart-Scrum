@@ -4,13 +4,13 @@ var express = require('express'),
     middlewares = require('./app/routes/middlewares');
 
 // Cfg
+require('dotenv').config();
+
 app.use(bodyparser.urlencoded({"extended" : false}));
 app.use(bodyparser.json());
 var routes = {
     home: require('./app/routes/home'),
-    sprint:  require('./app/routes/sprint'),
-    story:  require('./app/routes/story'),
-    generatedata:  require('./app/routes/generatedata'),
+    sprint:  require('./app/routes/sprint')
 };
 
 // Middlewares
@@ -20,8 +20,6 @@ app.use(middlewares.onRequest);
 // Routes
 app.use('/', routes.home);
 app.use('/', routes.sprint);
-app.use('/', routes.story);
-app.use('/', routes.generatedata);
 
 // Init
 db = require('./app/lib/database').init();

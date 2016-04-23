@@ -18,10 +18,4 @@ var historypointsSchema = new Schema({
     }
 });
 
-historypointsSchema.statics = {
-    getPopulateFields: function() {
-        return '_story';
-    }
-};
-
 module.exports = mongoose.model('HistoryPoints', historypointsSchema);

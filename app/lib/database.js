@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
 
 module.exports = {
-    // Todo: Mettre tout ce qui est "config" dans un fichier séparé
-    connectStr: "mongodb://admin:admin@192.168.0.240/scrub",
-    init: function() {
+    init: function(cfg) {
 
-        mongoose.connect(this.connectStr, { server: { auto_reconnect: true }});
+        mongoose.connect(process.env.DB_URI, { server: { auto_reconnect: true }});
         var db = mongoose.connection;
 
         mongoose.connection.on("opening", this.onOpening);
@@ -30,4 +28,4 @@ module.exports = {
     onDisconnected: function() {
         console.log("[DB] Base de données déconnectée!");
     }
-}
+};
