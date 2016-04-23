@@ -1,0 +1,10 @@
+{ "points" : 10, "_story" : { "$oid" : "571a35d9fc07e0f88455bef1" }, "_id" : { "$oid" : "571a35d9fc07e0f88455bef2" }, "date" : { "$date" : 1461335513996 }, "__v" : 0 }
+{ "points" : 5, "_story" : { "$oid" : "571a35d9fc07e0f88455bef1" }, "_id" : { "$oid" : "571a35d9fc07e0f88455bef3" }, "date" : { "$date" : 1461508313996 }, "__v" : 0 }
+{ "points" : 1, "_story" : { "$oid" : "571a35d9fc07e0f88455bef1" }, "_id" : { "$oid" : "571a35d9fc07e0f88455bef4" }, "date" : { "$date" : 1461594713997 }, "__v" : 0 }
+{ "points" : 0, "_story" : { "$oid" : "571a35d9fc07e0f88455bef1" }, "_id" : { "$oid" : "571a35d9fc07e0f88455bef5" }, "date" : { "$date" : 1461767513997 }, "__v" : 0 }
+{ "points" : 2, "_story" : { "$oid" : "571a35d9fc07e0f88455bef6" }, "_id" : { "$oid" : "571a35d9fc07e0f88455bef7" }, "date" : { "$date" : 1461335513999 }, "__v" : 0 }
+{ "points" : 0, "_story" : { "$oid" : "571a35d9fc07e0f88455bef6" }, "_id" : { "$oid" : "571a35dafc07e0f88455bef8" }, "date" : { "$date" : 1461421914000 }, "__v" : 0 }
+{ "points" : 12, "_story" : { "$oid" : "571a35dafc07e0f88455bef9" }, "_id" : { "$oid" : "571a35dafc07e0f88455befa" }, "date" : { "$date" : 1461335514001 }, "__v" : 0 }
+{ "points" : 5, "_story" : { "$oid" : "571a35dafc07e0f88455bef9" }, "_id" : { "$oid" : "571a35dafc07e0f88455befb" }, "date" : { "$date" : 1461681114002 }, "__v" : 0 }
+{ "points" : 3, "_story" : { "$oid" : "571a35dafc07e0f88455bef9" }, "_id" : { "$oid" : "571a35dafc07e0f88455befc" }, "date" : { "$date" : 1461767514002 }, "__v" : 0 }
+{ "points" : 0, "_story" : { "$oid" : "571a35dafc07e0f88455bef9" }, "_id" : { "$oid" : "571a35dafc07e0f88455befd" }, "date" : { "$date" : 1461853914002 }, "__v" : 0 }
