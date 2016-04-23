@@ -9,6 +9,9 @@ Importer les données dans mongodb ( les fichiers se trouvent dans le dossier db
 > mongoimport --db scrub --collection historypoints --file historypoints.json
 ```
 
+Configurer l'api :
+> Modifier le fichier .env
+
 Lancer l'api :
 ```
 > npm install  
